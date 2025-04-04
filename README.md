@@ -1,35 +1,39 @@
 # Ring_Signature_SE6018_project
+My python version is 3.12.0.
+
+I do this on windows10 laptop. \n and \r\n issue may matter. 
+
 This is an implementation of 3 participant ring signature, whose diagram is on my notebook p9. 
-
-All parameters in this project is int. So my matrix number is transformed into int. 
-
-The submission of source file is ring_signature.ipynb. 
-
-The not_used.py is not part of the project. It's something I wrote but later found useless. I don't want to delete it. 
 
 This is SE6018 final project. I put it public for employers to see. Students please don't copy. 
 
-# Don't run rsa_generation.ipynb
-rsa_generation.ipynb generates 3 sets of RSA parameters for the users, storing them in user1_key.txt, user2_key.txt and user3_key.txt. 
+# Special notice
+Padding 0 in the front is really f****** import. m > n in rsa will lead to fatal error. This issue stop me from sleeping til 3am. 
 
-RSA user generation is in rsa.py. Since I have to calculate x2, the other 2 users can not be generated randomly every time.
+# rsa_generation.py
+Generate 3 users' N, p, q, d, e, rewrite into 3 txt files. 
 
-Therefore the 3 user's RSA parameters is generated before the running ring_signature.ipynb. Then I can calculate x2, and use it in ring_signature.ipynb. 
+# calculate_x2.py
+Calculate x2, given 3 users' RSA keys. 
 
-# useri_keys.txt
-As is required, d is not inside. I have to calculate d myself in ring_signature.ipynb. I think it's better to store d inside it too. 
+# ring_signature.py
+Implementation and verification of ring signature. It works based on the calculated x2. 
 
-# calculate_x2.ipynb
-That's how I calculate x2 based on the 3 users. The result will be stored in x2.txt. 
+# not_used.py.txt
+Some not used codes. I don't want to delete, and I don't know where to keep it. So I throw it here. 
 
-# ring_signature.ipynb
-This is the ring_signature and verification part. 
+# What you should do to judge my project 1
+You can do manually. 
 
-# What you should do to judge my project
-Don't run rsa_generation.ipynb. Just read through it. Running it will cause rewriting 3 txt files. If you insist on that, it's okay. x2 will be changed and result will still be correct. 
+python rsa_generation.py
 
-You should run ring_signature.ipynb and check result. 
+python calculate_x2.py
 
-You should run calculate_x2.ipynb and check x2. 
+python ring_signature.py
 
-My version of python is python 13.2.0.
+Sequence matters. By running these 3 source files, you generate 3 sets of RSA keys, calculate x2 and use my matrix number to do ring signature. 
+
+# What you should do to judge my project 2
+You can also use check_project.ipynb. It is equivalent to running 3 commands and check for 100 times. 
+
+I'm sorry to see that sometimes it's still bugged. I can not deal with it. 

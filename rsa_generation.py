@@ -3,9 +3,6 @@ import random
 from math import gcd
 
 
-key_length = 1024
-
-
 
 
 
@@ -14,20 +11,17 @@ key_length = 1024
 # RSA
 
 
-def modulo_mul(a, b, n):
-    return (a * b) % n
-
 
 def modulo_exp(a, e, n):
-    main = 1
-    now = a
-    # e to bin
-    e_bin = bin(e)[2:]
-    for bit in e_bin:
-        if bit == '1':
-            main = modulo_mul(main, now, n)
-        now = modulo_mul(now, now, n)
-    return main
+    result = 1
+    a = a % n
+    while e > 0:
+        if e % 2 == 1:
+            result = (result * a) % n
+        a = (a * a) % n
+        e //= 2
+    return result
+
     
 def modulo_inv(a, n):
     # find inverse with extended euclidean algorithm
@@ -72,6 +66,14 @@ def generate_prime(bits):
             return num
 
 
+def rsa_encrypt(m, e, n):
+    return modulo_exp(m, e, n)
+
+
+def rsa_decrypt(c, d, n):
+    return modulo_exp(c, d, n)
+
+
 def rsa_generate(key_length):
     pq_length = key_length//2
     while True:
@@ -84,12 +86,15 @@ def rsa_generate(key_length):
         if p == q:
             continue
 
+        n = p * q
+        if len(bin(n)) - 2 != key_length:
+            continue
+
         phi_N = (p - 1) * (q - 1)
 
         while True:
             e = generate_prime(pq_length//2 + 1) # can be insecure
             if gcd(phi_N, e) == 1:
-                n = p * q
                 d = modulo_inv(e, phi_N)
                 if d < (1 / 3) * (n ** (1 / 4)):
                     continue
@@ -108,12 +113,7 @@ def rsa_generate(key_length):
                 }
 
 
-def rsa_encrypt(m, e, n):
-    return modulo_exp(m, e, n)
 
-
-def rsa_decrypt(c, d, n):
-    return modulo_exp(c, d, n)
 
 
 class rsa_user:
@@ -146,6 +146,7 @@ def save_user_keys(user, user_index):
             f.write(f"N: {user.n}\n")
             f.write(f"p: {user.p}\n")
             f.write(f"q: {user.q}\n")
+            f.write(f"d: {user.d}\n")
             f.write(f"e: {user.e}\n")
     except Exception as e:
         print(f"Error when saving parameters of user {user_index} : {e}")
@@ -156,7 +157,8 @@ def read_user_from_file(file_path):
         n = int(lines[0].split(': ')[1].strip())
         p = int(lines[1].split(': ')[1].strip())
         q = int(lines[2].split(': ')[1].strip())
-        e = int(lines[3].split(': ')[1].strip())
+        d = int(lines[3].split(': ')[1].strip())
+        e = int(lines[4].split(': ')[1].strip())
 
     phi = (p - 1) * (q - 1)
     d = modulo_inv(e, phi)
@@ -166,7 +168,8 @@ def read_user_from_file(file_path):
 
 
 
-
-for i in range(1, 4):
-    user = rsa_user(key_length)
-    save_user_keys(user, i)
+if __name__ == "__main__":
+    key_length = 1024
+    for i in range(1, 4):
+        user = rsa_user(key_length)
+        save_user_keys(user, i)
