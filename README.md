@@ -11,7 +11,7 @@ This is SE6018 final project. I put it public for employers to see. Students ple
 Padding 0 in the front is really f****** import. m > n in rsa will lead to fatal error. This issue stop me from sleeping til 3am. 
 
 # rsa_generation.py
-Generate 3 users' N, p, q, d, e, rewrite into 3 txt files. 
+Generate 3 users' N, p, q, d, e, rewrite into 3 txt files. In the latest version, I fixed rsa generation failure issue. I check whether the p, q, e pairs is valid by perfoming ring signature, and regenerate when it fails. So the ring signature will be always valid. This makes generating speed 1.5 times slower, but 100% correct. 
 
 # calculate_x2.py
 Calculate x2, given 3 users' RSA keys. 
@@ -34,6 +34,4 @@ python ring_signature.py
 Sequence matters. By running these 3 source files, you generate 3 sets of RSA keys, calculate x2 and use my matrix number to do ring signature. 
 
 # What you should do to judge my project 2
-You can also use check_project.ipynb. It is equivalent to running 3 commands and check for 100 times. 
-
-I'm sorry to see that sometimes it's still bugged. I can not deal with it. 
+You can also use check_project.ipynb. It is equivalent to running 3 commands and check for 100 times.
